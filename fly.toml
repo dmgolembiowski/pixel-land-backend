@@ -1,0 +1,47 @@
+# fly.toml file generated for pixel-land-backend on 2022-02-19T10:41:15-05:00
+
+app = "pixel-land-backend"
+
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[env]
+
+[experimental]
+  cmd = "./pixel-land-backend"
+  allowed_public_ports = []
+  auto_rollback = true
+
+[[services]]
+  internal_port = 8080
+  processes = ["app"]
+  protocol = "tcp"
+  script_checks = []
+
+  [services.concurrency]
+    hard_limit = 256
+    soft_limit = 128
+    type = "connections"
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = "15s"
+    restart_limit = 0
+    timeout = "2s"
+
+  [[services.http_checks]]
+    interval = 100
+    grace_period = "5s"
+    method = "get"
+    path = "/health_check"
+    protocol = "http"
+    tls_skip_verify = false

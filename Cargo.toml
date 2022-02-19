@@ -5,4 +5,18 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[profile.release]
+incremental = true
+lto = true
+codegen-units = 1
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+path = "src/main.rs"
+name = "pixel-land-backend"
+
 [dependencies]
+tokio = { version = "1.17.0", features = ["macros", "rt-multi-thread"] }
+actix-web = "4.0.0-rc.3"
