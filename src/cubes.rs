@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::sync::RwLock;
 
 #[derive(PartialEq, Debug, Clone, Serialize, Deserialize)]
 pub enum CubeColor {
@@ -33,15 +34,15 @@ impl Default for CubeColor {
     }
 }
 
-#[derive(PartialEq, Debug, Clone, Serialize, Deserialize)]
-pub struct CubeData {
-    pub arr: Vec<Vec<CubeColor>>,
+#[derive(Debug)]
+pub struct Cubes {
+    pub grid: RwLock<Vec<Vec<CubeColor>>>,
 }
 
-impl Default for CubeData {
+impl Default for Cubes {
     fn default() -> Self {
-        CubeData {
-            arr: vec![vec![CubeColor::default(); 1000]; 1000],
+        Cubes {
+            grid: RwLock::new(vec![vec![CubeColor::default(); 5]; 5]),
         }
     }
 }
