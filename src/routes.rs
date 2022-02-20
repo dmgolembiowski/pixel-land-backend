@@ -35,9 +35,18 @@ pub async fn fetch_cubes(req: HttpRequest) -> HttpResponse {
     //let mut my_x = x.grid.lock().unwrap();
     //let z = *my_x;
 
-    match serde_json::to_string(&*req.app_data::<Data<Cubes>>().unwrap().grid.read().unwrap()) {
+    match serde_json::to_string(&*match match req.app_data::<Data<Cubes>>() {
+        Some(x) => x,
+        None => return HttpResponse::InternalServerError().finish(),
+    }
+    .grid
+    .read()
+    {
+        Ok(x) => x,
+        Err(er) => return HttpResponse::InternalServerError().body(er.to_string()),
+    }) {
         Ok(serialized) => HttpResponse::Ok().body(serialized),
-        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+        Err(errr) => return HttpResponse::InternalServerError().body(errr.to_string()),
     }
 }
 
